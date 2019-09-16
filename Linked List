@@ -1,0 +1,231 @@
+//********************OPERATIONS ON LINKED LIST*********************************
+
+//ASHWAMEGHA N. HOLKAR
+
+/*Write C++ program to store set of negative and positive numbers using linked list. Write functions to 
+a) Insert numbers
+b) Delete nodes with negative numbers
+c) Create two more linked lists using this list, one containing all positive numbers and other containing negative numbers
+d) For two lists that are sorted; Merge these two lists into third resultant list that is sorted.*/
+#include<iostream>
+using namespace std;
+struct Node
+{
+    int data;
+    struct Node*link;
+};
+struct Node*root=NULL;
+ struct Node*root1=NULL;
+     struct Node*root2=NULL;
+class LinkedList
+{
+  public: void getList();
+          void displayList(struct Node*);
+          void deleteNeg();
+          void sepList();
+          void sortList(struct Node*);
+          void mergeList();
+          
+};
+void LinkedList::getList()
+{  
+    int n,i;
+    struct Node*temp=new Node;
+    cout<<"\nHow many nodes you wants to create\n";
+    cin>>n;
+    cout<<"\nEnter head node:\n";
+    cin>>temp->data;//taking head or first node from user
+    temp->link=NULL;
+    root=temp;
+    struct Node*p=new Node;
+    p=root;
+    for(i=1;i<n;i++)
+    {
+        struct Node*temp=new Node;
+        cout<<"\nEnter next data:\n";
+        cin>>temp->data;//taking remaining nodes from user
+        temp->link=NULL;
+        p->link=temp;
+        p=p->link;
+    }
+}
+void LinkedList::displayList(struct Node* root)
+{
+    struct Node*p=new Node;
+    if(root==NULL)
+    {
+        cout<<"\nYour List is EMPTY\n";
+    }
+    else{
+        p=root;
+        while(p!=NULL)
+        {
+            cout<<p->data<<" ";
+            p=p->link;
+        }
+    }
+}
+void LinkedList::deleteNeg()
+{
+    struct Node*temp=new Node;
+    struct Node*pre=NULL;
+    //struct Node*p=new Node;
+    temp=root;
+       while(temp!=NULL)
+        {   
+         
+              //if negative number is at first position
+              if(root->data<0)
+              {
+                  temp=root->link;
+                  delete(root);
+                  root=temp;
+              }
+          
+                 //if negative number is in between the list
+              else if(temp->data<0)
+              {
+                   
+                   pre->link=temp->link;
+                   delete(temp);
+              }
+               else if(temp->data<0&&temp->link==NULL)
+              {
+                   
+                   pre->link=NULL;
+                 
+                   delete(temp);
+              }
+             
+                  pre=temp;
+                  temp=temp->link;
+             
+           
+        }
+}
+ void LinkedList::sepList()
+ {
+     struct Node*n1=new Node;
+     struct Node*n2=new Node;
+     struct Node*temp=new Node;
+    // struct Node*p=new Node;
+     temp=root;
+     while(temp!=NULL)
+     {
+         if(temp->data>0)
+         {
+              struct Node*pos=new Node;
+             pos->data=temp->data;
+             pos->link=NULL;
+             if(root1==NULL)
+             {
+                 n1=pos;
+                 root1=pos;
+             }
+             else{
+                n1->link=pos;
+                n1=pos;
+             }
+         }
+         else if(temp->data<0)
+         {
+             struct Node*neg=new Node;
+             neg->data=temp->data;
+             neg->link=NULL;
+             if(root2==NULL)
+             {
+                  root2=neg;
+                 n2=neg;
+                
+             }
+             else{
+                 n2->link=neg;
+                 n2=neg;
+             }
+         }
+         temp=temp->link;
+     }
+ }
+ void LinkedList::sortList(struct Node*root1)
+{
+  struct Node*pre,*temp;
+  struct Node*p=new Node;
+  for(pre=root1;pre->link!=NULL;pre=pre->link)
+  {
+   for(temp=pre->link;temp!=NULL;temp=temp->link)
+   {
+    if(pre->data > temp->data)
+    {
+      p->data=temp->data;
+      temp->data=pre->data;
+      pre->data=p->data; 
+    }
+   }
+  }
+}
+void LinkedList::mergeList()
+{
+  struct Node*p=new Node;
+  p=root2;
+  while(p->link!=NULL)
+  {
+    p=p->link;
+  }
+  p->link=root1;
+}
+int main()
+{
+    struct Node n;
+    LinkedList l;
+    int choice;
+    char b;
+    do{
+       cout<<"\n1.Create List\n2.Delete Negative Numbers From List\n3.Separate List Of Positive and Negative Numbers\n4.Two Sorted List\n5.Merge Two List\n";
+       cin>>choice;
+       switch(choice){
+         case 1 :
+                {
+                 l.getList();
+                  cout<<"\nYour List:\n";
+                 l.displayList(root);
+                 break;
+                }
+         case 2:
+               {
+                 l.deleteNeg();
+                  cout<<"\nAfter Deletion Your New List:\n";
+                 l.displayList(root);
+                 break;
+               }
+          case 3:
+               {
+                  cout<<"\nYour POSITIVE List Separated From Original List"<<endl;
+                  l.sepList();
+                  l.displayList(root1);
+                  cout<<"\nYour NEGATIVE List Separated From Original List"<<endl;
+                  l.displayList(root2);
+                 break;
+               }
+          case 4:
+               {
+                 l.sortList(root1);
+                 cout<<"\nYour Sorted POSITIVE List:\n";
+                 l.displayList(root1);
+                 l.sortList(root2);
+                 cout<<"\nYour Sorted NEGATIVE List:\n";
+                 l.displayList(root2);
+                 break;
+               }
+          case 5:
+               {
+                  l.mergeList();
+                  cout<<"\nYour Merged List:\n";
+                  l.displayList(root2);
+                 break;
+               }
+      }
+      cout<<"\nDo You Want To Continue(y/n)\n";
+      cin>>b;
+    }while(b=='Y'||b=='y');
+    return 0;
+}
